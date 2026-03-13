@@ -32,8 +32,8 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
   const radius = 180;
   const circumference = 2 * Math.PI * radius;
 
-  // Небольшой зазор между основными 4 фазами
-  const gap = 12;
+  // Относительно небольшой зазор между основными 4 фазами
+  const gap = 6;
 
   // Функция для расчета stroke-dasharray для каждого сегмента
   const getSegmentStyles = (phaseDuration: number, previousDuration: number) => {
@@ -86,7 +86,7 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
           {isPhysiological && (
             <g style={{ transform: `rotate(${markerAngle}deg)`, transformOrigin: '200px 200px' }}>
               {/* Точно на линии орбиты (200 + 180 = 380), белый кружок (окрасится в 0.25 прозрачности благодаря группе) */}
-              <circle cx="380" cy="200" r="3.5" fill="#FFF" />
+              <circle cx="380" cy="200" r="2" fill="#FFF" />
             </g>
           )}
 
