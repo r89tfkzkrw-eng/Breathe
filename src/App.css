@@ -6,7 +6,7 @@
   justify-content: center;
   position: relative;
   width: 100%;
-  height: 100svh; /* Гарантированная высота без скрытых панелей Safari */
+  height: 100dvh; /* Возвращаем dvh: он корректно работает с Safari Toolbar при скролле */
   overflow: hidden;
 }
 
@@ -118,7 +118,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100svh;
+  height: 100dvh;
   background: var(--bg-main);
   z-index: 50;
   display: flex;
@@ -417,11 +417,12 @@ input[type=number]::-webkit-outer-spin-button {
 
 @media (max-width: 450px) {
   .bottom-bar {
-    padding: 1.25rem;
-    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    /* На мобильных делаем отступ СНИЗУ БОЛЬШЕ, чтобы кнопка точно поднялась над тулбаром */
+    padding-bottom: calc(3rem + env(safe-area-inset-bottom));
   }
   .corner-controls {
-    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    /* Также поднимаем и угловые элементы */
+    bottom: calc(3rem + env(safe-area-inset-bottom));
     left: 1.25rem;
     right: 1.25rem;
   }

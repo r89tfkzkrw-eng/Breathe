@@ -13,8 +13,8 @@
 
 @media (max-width: 450px) {
   .liquid-orb-container {
-    width: 285px;  /* Уменьшено на 25% */
-    height: 285px;
+    width: 247px;  /* Уменьшено на 35% от 380px */
+    height: 247px;
   }
 }
 
