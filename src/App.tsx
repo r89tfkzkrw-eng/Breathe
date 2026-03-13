@@ -139,7 +139,7 @@ const TRANSLATIONS = {
 
 const audio = new AudioEngine();
 
-function CustomDurationInput({ label, valueMs, onChange }: { label: string, valueMs: number, onChange: (val: number) => void }) {
+function CustomDurationInput({ label, valueMs, onChange, phaseKey }: { label: string, valueMs: number, onChange: (val: number) => void, phaseKey: string }) {
   const [strValue, setStrValue] = useState((valueMs / 1000).toString());
 
   useEffect(() => {
@@ -175,7 +175,7 @@ function CustomDurationInput({ label, valueMs, onChange }: { label: string, valu
   };
 
   return (
-    <div className="input-group">
+    <div className={`input-group phase-${phaseKey}`}>
       <label>{label}</label>
       <div className="input-stepper">
         <button className="stepper-btn" onClick={decrement}>-</button>
@@ -389,6 +389,7 @@ function App() {
                   {(['inhale', 'hold', 'exhale', 'holdOut'] as const).map(p => (
                     <CustomDurationInput 
                       key={p}
+                      phaseKey={p}
                       label={p === 'inhale' ? t.labelInhale : p === 'hold' ? t.labelHold : p === 'exhale' ? t.labelExhale : t.labelHoldOut}
                       valueMs={customDurations[p]}
                       onChange={(valMs) => handleCustomChange(p, valMs)}
