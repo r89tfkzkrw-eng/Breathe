@@ -338,13 +338,17 @@ input[type=number]::-webkit-outer-spin-button {
 
 .lang-switch, .corner-feedback {
   pointer-events: auto; /* Включаем клики для самих элементов */
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   opacity: 0.3;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, color 0.2s ease;
   color: var(--text-main);
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.corner-feedback {
+  font-size: 0.6rem; /* Делаем фидбек еще меньше и неприметнее */
 }
 
 .lang-switch:hover, .corner-feedback:hover {
@@ -354,6 +358,7 @@ input[type=number]::-webkit-outer-spin-button {
 .lang-switch span.active {
   font-weight: 600;
   opacity: 1;
+  color: white; /* Активный язык выделен ярко-белым */
 }
 
 .lang-switch span.separator {

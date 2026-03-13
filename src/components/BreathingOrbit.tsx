@@ -12,9 +12,10 @@ type BreathingOrbitProps = {
   durations: PhaseDurations;
   currentPhase: 'idle' | 'inhale' | 'inhaleDouble' | 'hold' | 'exhale' | 'holdOut';
   isPlaying: boolean;
+  isPhysiological?: boolean; // Флаг для разбивки вдоха на два отрезка
 };
 
-export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, currentPhase, isPlaying }) => {
+export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, currentPhase, isPlaying, isPhysiological }) => {
   const totalDuration = durations.inhale + durations.hold + durations.exhale + durations.holdOut;
   
   // Для синхронизации CSS анимации индикатора с реальным стартом цикла
@@ -53,8 +54,12 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
     };
   };
 
-  const inhaleOffset = 0;
-  const holdOffset = durations.inhale;
+  const inhale1Length = isPhysiological ? Math.floor(durations.inhale * 0.7) : durations.inhale;
+  const inhale2Length = isPhysiological ? durations.inhale - inhale1Length : 0;
+
+  const inhale1Offset = 0;
+  const inhale2Offset = inhale1Offset + inhale1Length;
+  const holdOffset = durations.inhale; // hold начинается после всего вдоха (inhale1 + inhale2)
   const exhaleOffset = holdOffset + durations.hold;
   const holdOutOffset = exhaleOffset + durations.exhale;
 
@@ -63,11 +68,20 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
       <svg width="400" height="400" className="orbit-svg" viewBox="0 0 400 400">
         
         {/* Базовый трек: белые/серые отрезки */}
+        {/* Первый вдох (или единственный) */}
         <circle 
           cx="200" cy="200" r={radius} 
           className="orbit-track-segment"
-          style={getSegmentStyles(durations.inhale, inhaleOffset)}
+          style={getSegmentStyles(inhale1Length, inhale1Offset)}
         />
+        {/* Довдох (только если physiological) */}
+        {isPhysiological && (
+          <circle 
+            cx="200" cy="200" r={radius} 
+            className="orbit-track-segment"
+            style={getSegmentStyles(inhale2Length, inhale2Offset)}
+          />
+        )}
         <circle 
           cx="200" cy="200" r={radius} 
           className="orbit-track-segment"

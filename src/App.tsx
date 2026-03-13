@@ -22,7 +22,7 @@ export type BreathPreset = {
   durations: PresetValues;
 };
 
-export const PRESETS: BreathPreset[] = [
+export const PRESETS_RU: BreathPreset[] = [
   {
     id: 'box',
     name: 'Квадратное дыхание (Box Breathing)',
@@ -52,6 +52,90 @@ export const PRESETS: BreathPreset[] = [
     durations: { inhale: 3000, hold: 0, exhale: 6000, holdOut: 2000 }
   }
 ];
+
+export const PRESETS_EN: BreathPreset[] = [
+  {
+    id: 'box',
+    name: 'Box Breathing',
+    description: 'Calms the nervous system, relieves stress and restores focus.',
+    instruction: 'Inhale through your nose, exhale softly through a relaxed mouth.',
+    durations: { inhale: 4000, hold: 4000, exhale: 4000, holdOut: 4000 }
+  },
+  {
+    id: 'relax-478',
+    name: 'Deep Sleep (4-7-8)',
+    description: 'Dr. Andrew Weil\'s technique for powerful parasympathetic nervous relaxation.',
+    instruction: 'Tongue on your palate. Inhale through nose, hold, long exhale through mouth with a whoosh.',
+    durations: { inhale: 4000, hold: 7000, exhale: 8000, holdOut: 0 }
+  },
+  {
+    id: 'coherent',
+    name: 'Coherent Breathing',
+    description: 'Maximizes heart rate variability. Ideal for balance.',
+    instruction: 'Smooth inhale and exhale without pauses. Breathe very lightly.',
+    durations: { inhale: 5500, hold: 0, exhale: 5500, holdOut: 0 }
+  },
+  {
+    id: 'physiological',
+    name: 'Physiological Sigh',
+    description: 'Two inhales to pop open the alveoli and a long exhale. Instantly relieves panic.',
+    instruction: 'Two inhales through the nose. Second is a short top-off. Exhale through the mouth.',
+    durations: { inhale: 3000, hold: 0, exhale: 6000, holdOut: 2000 }
+  }
+];
+
+const TRANSLATIONS = {
+  ru: {
+    ready: 'Готовы?',
+    inhale: 'Вдох...',
+    inhaleDouble: 'До-вдох...',
+    hold: 'Задержите...',
+    exhale: 'Выдох...',
+    holdOut: 'Задержите...',
+    settingsTitle: 'Дыхательные техники',
+    presetsTitle: 'Готовые техники',
+    customTitle: 'Собственный ритм',
+    customName: 'Свой ритм',
+    customDesc: 'Ваши индивидуальные настройки',
+    customInst: 'Следуйте своему собственному ритму дыхания.',
+    customBtn: 'Настроить вручную',
+    customBtnDesc: 'Укажите длину фаз (в секундах). Сохраняется автоматически.',
+    labelInhale: 'Вдох',
+    labelHold: 'Задержка',
+    labelExhale: 'Выдох',
+    labelHoldOut: 'Пауза (выдох)',
+    startCustom: 'Начать в своём ритме',
+    feedback: 'feedback',
+    settingsBtn: 'Настройки',
+    returnBtn: 'Вернуться к выбору',
+    startBtn: 'Начать практику'
+  },
+  en: {
+    ready: 'Ready?',
+    inhale: 'Inhale...',
+    inhaleDouble: 'Top-off...',
+    hold: 'Hold...',
+    exhale: 'Exhale...',
+    holdOut: 'Hold...',
+    settingsTitle: 'Breathing Techniques',
+    presetsTitle: 'Presets',
+    customTitle: 'Custom Rhythm',
+    customName: 'Custom Rhythm',
+    customDesc: 'Your unique settings',
+    customInst: 'Follow your own breathing rhythm.',
+    customBtn: 'Set Manually',
+    customBtnDesc: 'Set phase lengths in seconds. Saves automatically.',
+    labelInhale: 'Inhale',
+    labelHold: 'Hold',
+    labelExhale: 'Exhale',
+    labelHoldOut: 'Hold out',
+    startCustom: 'Start your rhythm',
+    feedback: 'feedback',
+    settingsBtn: 'Settings',
+    returnBtn: 'Back to Presets',
+    startBtn: 'Start Practice'
+  }
+};
 
 const audio = new AudioEngine();
 
@@ -111,39 +195,36 @@ function CustomDurationInput({ label, valueMs, onChange }: { label: string, valu
 }
 
 function App() {
+  const [lang, setLang] = useState<'ru' | 'en'>(() => {
+    return (localStorage.getItem('breatheLang') as 'ru' | 'en') || 'ru';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('breatheLang', lang);
+  }, [lang]);
+
+  const t = TRANSLATIONS[lang];
+  const presetsList = lang === 'ru' ? PRESETS_RU : PRESETS_EN;
+
   const [phase, setPhase] = useState<Phase>('idle');
   const [phaseDuration, setPhaseDuration] = useState(2000); // Базовое время для idle
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [activePreset, setActivePreset] = useState<BreathPreset>(() => {
-    const savedMode = localStorage.getItem('breatheLastPreset');
-    const customSaved = localStorage.getItem('breatheCustomPreset');
-    
-    if (savedMode === 'custom' && customSaved) {
-      try {
-        return { id: 'custom', name: 'Свой ритм', description: 'Ваши индивидуальные настройки', instruction: 'Следуйте своему собственному ритму дыхания.', durations: JSON.parse(customSaved) };
-      } catch (e) {}
-    } else if (savedMode) {
-      const found = PRESETS.find(p => p.id === savedMode);
-      if (found) return found;
-    }
-    return PRESETS[0];
+  
+  const [activePresetId, setActivePresetId] = useState<string>(() => {
+    return localStorage.getItem('breatheLastPreset') || 'box';
   });
   
   // Сохраняем последний выбранный пресет
   useEffect(() => {
-    localStorage.setItem('breatheLastPreset', activePreset.id);
-  }, [activePreset.id]);
+    localStorage.setItem('breatheLastPreset', activePresetId);
+  }, [activePresetId]);
   
   // Для кастомного режима сохраняем в localStorage
   const [customDurations, setCustomDurations] = useState<PresetValues>(() => {
     const saved = localStorage.getItem('breatheCustomPreset');
     if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        // ignore
-      }
+      try { return JSON.parse(saved); } catch (e) {}
     }
     return { inhale: 4000, hold: 4000, exhale: 4000, holdOut: 4000 };
   });
@@ -152,11 +233,11 @@ function App() {
     const newDurations = { ...customDurations, [phaseName]: valueMs };
     setCustomDurations(newDurations);
     localStorage.setItem('breatheCustomPreset', JSON.stringify(newDurations));
-    
-    if (activePreset.id === 'custom') {
-      setActivePreset({ ...activePreset, durations: newDurations });
-    }
   };
+
+  const activePreset = activePresetId === 'custom' 
+    ? { id: 'custom', name: t.customName, description: t.customDesc, instruction: t.customInst, durations: customDurations }
+    : (presetsList.find(p => p.id === activePresetId) || presetsList[0]);
 
   // Temporary mock engine to see visualizer
   useEffect(() => {
@@ -235,13 +316,13 @@ function App() {
   }, [showSettings, isPlaying]);
 
   const getInstruction = () => {
-    if (!isPlaying) return 'Готовы?';
+    if (!isPlaying) return t.ready;
     switch (phase) {
-      case 'inhale': return 'Вдох...';
-      case 'inhaleDouble': return 'До-вдох...';
-      case 'hold': return 'Задержите...';
-      case 'exhale': return 'Выдох...';
-      case 'holdOut': return 'Задержите...';
+      case 'inhale': return t.inhale;
+      case 'inhaleDouble': return t.inhaleDouble;
+      case 'hold': return t.hold;
+      case 'exhale': return t.exhale;
+      case 'holdOut': return t.holdOut;
       default: return '';
     }
   };
@@ -263,26 +344,26 @@ function App() {
               <button className="icon-button" onClick={() => setShowSettings(false)}>
                 <ChevronLeft size={24} />
               </button>
-              <h2>Дыхательные техники</h2>
+              <h2>{t.settingsTitle}</h2>
               <div style={{ width: 48 }} /> {/* Spacer */}
             </div>
             <div className="settings-body">
               {/* Левая колонка: Пресеты */}
               <div className="preset-list">
-                <h3>Готовые техники</h3>
-                {PRESETS.map(preset => (
+                <h3>{t.presetsTitle}</h3>
+                {presetsList.map(preset => (
                   <button
                     key={preset.id}
-                    className={`preset-card ${activePreset.id === preset.id ? 'active' : ''}`}
+                    className={`preset-card ${activePresetId === preset.id ? 'active' : ''}`}
                     onClick={() => {
-                      setActivePreset(preset);
+                      setActivePresetId(preset.id);
                       if (isPlaying) setIsPlaying(false);
                       setShowSettings(false);
                     }}
                   >
                     <h4>{preset.name}</h4>
                     <p>{preset.description}</p>
-                    {activePreset.id === preset.id && (
+                    {activePresetId === preset.id && (
                       <p className="preset-instruction">💡 {preset.instruction}</p>
                     )}
                   </button>
@@ -291,24 +372,24 @@ function App() {
 
               {/* Правая колонка: Кастомный режим */}
               <div className="custom-builder">
-                <h3>Собственный ритм</h3>
+                <h3>{t.customTitle}</h3>
                 <button
-                  className={`preset-card ${activePreset.id === 'custom' ? 'active' : ''}`}
+                  className={`preset-card ${activePresetId === 'custom' ? 'active' : ''}`}
                   onClick={() => {
-                    setActivePreset({ id: 'custom', name: 'Свой ритм', description: 'Ваши индивидуальные настройки', instruction: 'Следуйте своему собственному ритму дыхания.', durations: customDurations });
+                    setActivePresetId('custom');
                     if (isPlaying) setIsPlaying(false);
                   }}
                   style={{ marginBottom: '1.5rem' }}
                 >
-                  <h4>Настроить вручную</h4>
-                  <p>Укажите длину фаз (в секундах). Сохраняется автоматически.</p>
+                  <h4>{t.customBtn}</h4>
+                  <p>{t.customBtnDesc}</p>
                 </button>
 
-                <div className={`custom-inputs ${activePreset.id !== 'custom' ? 'disabled' : ''}`}>
+                <div className={`custom-inputs ${activePresetId !== 'custom' ? 'disabled' : ''}`}>
                   {(['inhale', 'hold', 'exhale', 'holdOut'] as const).map(p => (
                     <CustomDurationInput 
                       key={p}
-                      label={p === 'inhale' ? 'Вдох' : p === 'hold' ? 'Задержка' : p === 'exhale' ? 'Выдох' : 'Пауза (выдох)'}
+                      label={p === 'inhale' ? t.labelInhale : p === 'hold' ? t.labelHold : p === 'exhale' ? t.labelExhale : t.labelHoldOut}
                       valueMs={customDurations[p]}
                       onChange={(valMs) => handleCustomChange(p, valMs)}
                     />
@@ -316,7 +397,7 @@ function App() {
                 </div>
 
                 <AnimatePresence>
-                  {activePreset.id === 'custom' && (
+                  {activePresetId === 'custom' && (
                      <motion.button
                         initial={{ opacity: 0, height: 0, marginTop: 0 }}
                         animate={{ opacity: 1, height: 'auto', marginTop: '1.5rem' }}
@@ -332,7 +413,7 @@ function App() {
                         }}
                      >
                        <Play size={18} fill="currentColor" />
-                       Начать в своём ритме
+                       {t.startCustom}
                      </motion.button>
                   )}
                 </AnimatePresence>
@@ -357,7 +438,7 @@ function App() {
                 onClick={() => setShowSettings(true)}
               >
                 <Settings size={18} />
-                Настройки
+                {t.settingsBtn}
               </motion.button>
             )}
           </AnimatePresence>
@@ -380,6 +461,7 @@ function App() {
               durations={activePreset.durations} 
               currentPhase={phase} 
               isPlaying={isPlaying} 
+              isPhysiological={activePresetId === 'physiological'}
             />
           )}
           
@@ -431,12 +513,12 @@ function App() {
           {isPlaying ? (
             <>
               <Pause size={20} fill="currentColor" />
-              Вернуться к выбору
+              {t.returnBtn}
             </>
           ) : (
             <>
               <Play size={20} fill="currentColor" />
-              Начать практику
+              {t.startBtn}
             </>
           )}
         </button>
@@ -445,14 +527,14 @@ function App() {
       {/* Угловые элементы (язык и feedback) */}
       <div className="corner-controls" style={{ display: showSettings ? 'none' : 'flex' }}>
         <div className="lang-switch">
-          <span className="active">Ru</span>
+          <span className={lang === 'ru' ? 'active' : ''} onClick={() => setLang('ru')} style={{ cursor: 'pointer' }}>Ru</span>
           <span className="separator">/</span>
-          <span style={{ cursor: 'pointer' }}>En</span>
+          <span className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')} style={{ cursor: 'pointer' }}>En</span>
         </div>
         
-        {/* Сюда можно подставить свой ник или ссылку */}
-        <a href="https://instagram.com/dmitry" target="_blank" rel="noreferrer" className="corner-feedback">
-          feedback
+        {/* Anti-spam form redirect. User sets up Formspree or uses mailto. */}
+        <a href="https://formspree.io/f/YOUR_FORM_ID_HERE" target="_blank" rel="noreferrer" className="corner-feedback" title="Feedback Form (Setup required)">
+          {t.feedback}
         </a>
       </div>
     </div>
