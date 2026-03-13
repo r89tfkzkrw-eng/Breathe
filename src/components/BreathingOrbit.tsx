@@ -54,12 +54,13 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
     };
   };
 
-  const inhale1Length = isPhysiological ? Math.floor(durations.inhale * 0.7) : durations.inhale;
-  const inhale2Length = isPhysiological ? durations.inhale - inhale1Length : 0;
+  const inhale1Length = isPhysiological ? Math.floor(durations.inhale * 0.7) : 0;
+  // Угол поворота для маркера. Радиус круга 180, центр 200,200. Стартовая точка (0 градусов) в SVG-круге: cx+r, cy -> (380, 200)
+  const inhale1Percentage = isPhysiological ? inhale1Length / totalDuration : 0;
+  const markerAngle = inhale1Percentage * 360;
 
-  const inhale1Offset = 0;
-  const inhale2Offset = inhale1Offset + inhale1Length;
-  const holdOffset = durations.inhale; // hold начинается после всего вдоха (inhale1 + inhale2)
+  const inhaleOffset = 0;
+  const holdOffset = durations.inhale;
   const exhaleOffset = holdOffset + durations.hold;
   const holdOutOffset = exhaleOffset + durations.exhale;
 
@@ -68,19 +69,18 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
       <svg width="400" height="400" className="orbit-svg" viewBox="0 0 400 400">
         
         {/* Базовый трек: белые/серые отрезки */}
-        {/* Первый вдох (или единственный) */}
+        {/* Вдох */}
         <circle 
           cx="200" cy="200" r={radius} 
           className="orbit-track-segment"
-          style={getSegmentStyles(inhale1Length, inhale1Offset)}
+          style={getSegmentStyles(durations.inhale, inhaleOffset)}
         />
-        {/* Довдох (только если physiological) */}
+        {/* Маркер Довдоха (точка на орбите) */}
         {isPhysiological && (
-          <circle 
-            cx="200" cy="200" r={radius} 
-            className="orbit-track-segment"
-            style={getSegmentStyles(inhale2Length, inhale2Offset)}
-          />
+          <g style={{ transform: `rotate(${markerAngle}deg)`, transformOrigin: '200px 200px' }}>
+            {/* Точно на линии орбиты (200 + 180 = 380) */}
+            <circle cx="380" cy="200" r="5" fill="#fff" />
+          </g>
         )}
         <circle 
           cx="200" cy="200" r={radius} 

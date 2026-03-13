@@ -336,22 +336,22 @@ input[type=number]::-webkit-outer-spin-button {
   pointer-events: none; /* Пропускать клики сквозь контейнер */
 }
 
-.lang-switch, .corner-feedback {
-  pointer-events: auto; /* Включаем клики для самих элементов */
+.lang-switch {
+  pointer-events: auto;
   font-size: 0.7rem;
-  opacity: 0.3;
-  transition: opacity 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
   color: var(--text-main);
-  text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.corner-feedback {
-  font-size: 0.6rem; /* Делаем фидбек еще меньше и неприметнее */
+.lang-switch span {
+  opacity: 0.3;
+  transition: opacity 0.2s ease, color 0.2s ease;
 }
 
-.lang-switch:hover, .corner-feedback:hover {
+.lang-switch span:not(.active):not(.separator):hover {
   opacity: 0.8;
 }
 
@@ -364,6 +364,21 @@ input[type=number]::-webkit-outer-spin-button {
 .lang-switch span.separator {
   margin: 0 0.5rem;
   opacity: 0.4;
+}
+
+.corner-feedback {
+  pointer-events: auto;
+  font-size: 0.6rem;
+  opacity: 0.3;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  color: var(--text-main);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.corner-feedback:hover {
+  opacity: 0.8;
 }
 
 /* Инструкция перед запуском на главном экране */
