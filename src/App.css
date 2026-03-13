@@ -265,15 +265,35 @@
   transition: all 0.2s ease;
 }
 
-/* Цветовое кодирование активных фаз при наведении */
+/* Цветовое кодирование активных фаз при наведении (Сплошная заливка) */
 .input-group.phase-inhale:hover {
-  background: rgba(94, 234, 212, 0.08); /* Мягкий бирюзовый (цвет вдоха ауры) */
-  border-color: rgba(94, 234, 212, 0.25);
+  background: #5EEAD4; /* Бирюзовый */
+  border-color: #5EEAD4;
+  color: #000;
+}
+
+.input-group.phase-inhale:hover label,
+.input-group.phase-inhale:hover input {
+  color: #000;
+}
+.input-group.phase-inhale:hover .stepper-btn {
+  background: rgba(0,0,0,0.1);
+  color: #000;
 }
 
 .input-group.phase-exhale:hover {
-  background: rgba(192, 132, 252, 0.08); /* Теплый пурпурный/розовый (цвет выдоха/затухания) */
-  border-color: rgba(192, 132, 252, 0.25);
+  background: #34D399; /* Зеленый */
+  border-color: #34D399;
+  color: #000;
+}
+
+.input-group.phase-exhale:hover label,
+.input-group.phase-exhale:hover input {
+  color: #000;
+}
+.input-group.phase-exhale:hover .stepper-btn {
+  background: rgba(0,0,0,0.1);
+  color: #000;
 }
 
 /* Приглушение пассивных фаз (задержек) */
@@ -282,6 +302,8 @@
   background: transparent;
   border: 1px dashed rgba(255, 255, 255, 0.1);
   opacity: 0.5;
+  padding: 0.5rem; /* Физически меньше по высоте */
+  margin: 0 1rem; /* Сжали с боков */
 }
 
 .input-group.phase-hold:hover,
