@@ -1,3 +1,7 @@
+:root {
+  --orb-base-scale: 1; /* Для десктопа орб масштабируется как 1.0 */
+}
+
 .liquid-orb-container {
   position: relative;
   width: 380px;
@@ -12,8 +16,12 @@
 }
 
 @media (max-width: 450px) {
+  :root {
+    /* Для мобильных жестко ограничиваем максимальное разрастание орба на уровне CSS (на 25% слабее) */
+    --orb-base-scale: 0.75; 
+  }
   .liquid-orb-container {
-    width: 290px;  /* Уменьшаем, но не слишком сильно (примерно -24%) */
+    width: 290px;
     height: 290px;
   }
 }

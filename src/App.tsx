@@ -492,38 +492,39 @@ function App() {
         </main>
       </div>
 
-      {/* Bottom Controls (видна всегда) */}
-      <footer className="bottom-bar">
-        <button 
-          className="pill-button"
-          onClick={async () => {
-            if (showSettings) return; // заблокировано пока открыты настройки
-            if (!isPlaying) {
-              await audio.init(); 
-            }
-            setIsPlaying(!isPlaying);
-          }}
-          style={{ 
-            padding: '16px 32px', 
-            fontSize: '1.1rem',
-            opacity: showSettings ? 0.3 : 1, // Затухание, если открыты настройки
-            transition: 'opacity 0.3s ease',
-            cursor: showSettings ? 'default' : 'pointer'
-          }}
-        >
-          {isPlaying ? (
-            <>
-              <Pause size={20} fill="currentColor" />
-              {t.returnBtn}
-            </>
-          ) : (
-            <>
-              <Play size={20} fill="currentColor" />
-              {t.startBtn}
-            </>
-          )}
-        </button>
-      </footer>
+      {/* Bottom Controls (видна всегда, кроме настроек) */}
+      {!showSettings && (
+        <footer className="bottom-bar">
+          <button 
+            className="pill-button"
+            onClick={async () => {
+              if (showSettings) return; // резервная проверка
+              if (!isPlaying) {
+                await audio.init(); 
+              }
+              setIsPlaying(!isPlaying);
+            }}
+            style={{ 
+              padding: '16px 32px', 
+              fontSize: '1.1rem',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}
+          >
+            {isPlaying ? (
+              <>
+                <Pause size={20} fill="currentColor" />
+                {t.returnBtn}
+              </>
+            ) : (
+              <>
+                <Play size={20} fill="currentColor" />
+                {t.startBtn}
+              </>
+            )}
+          </button>
+        </footer>
+      )}
 
       {/* Угловые элементы (язык и feedback) */}
       <div className="corner-controls" style={{ display: showSettings ? 'none' : 'flex' }}>

@@ -139,6 +139,9 @@
   box-sizing: border-box;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+  /* ХАК ДЛЯ SAFARI: Создает отдельный композитный слой, чтобы фон под модалкой (орб) не моргал */
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .settings-header {
