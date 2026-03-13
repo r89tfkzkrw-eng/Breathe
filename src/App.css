@@ -23,15 +23,16 @@
 }
 
 .bottom-bar {
-  /* Переходим на grid-элемент для идеального распределения элементов футера */
-  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   padding: 2rem;
   padding-bottom: calc(2rem + env(safe-area-inset-bottom)); /* Учет отступа iPhone */
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: center;
   align-items: center;
   z-index: 10;
-  box-sizing: border-box;
 }
 
 .visualizer-area {
@@ -44,15 +45,9 @@
   position: relative;
 }
 
-/* На мобильных (ширина < 450px) уменьшаем визуализатор целиком на 20%, 
-   сохраняя идеальные оригинальные пропорции орба и орбиты друг к другу */
-@media (max-width: 450px) {
-  .visualizer-area {
-    /* transform-origin center фиксирует центр при сжатии */
-    transform: scale(0.80);
-    transform-origin: center;
-  }
-}
+/* На мобильных мы специально НЕ масштабируем весь визуализатор целиком (через transform: scale),
+   потому что это ломает рендеринг и позиционирование абсолютных дочерних элементов (Орбита уезжает).
+   Скейлинг будет происходить точечно внутри LiquidOrb.css и BreathingOrbit.css */
 
 .instruction-text {
   position: absolute;
@@ -413,33 +408,27 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* --- Угловые элементы главного экрана --- */
 .corner-controls {
+  position: absolute;
+  bottom: calc(2rem + env(safe-area-inset-bottom));
+  left: 2rem;
+  right: 2rem;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  pointer-events: none;
-}
-
-.bottom-bar {
-  width: 100%;
-  padding: 0 2rem;
-  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: flex-end;
   z-index: 10;
-  pointer-events: none;
-  box-sizing: border-box;
+  pointer-events: none; /* Пропускать клики сквозь контейнер */
 }
 
 @media (max-width: 450px) {
   .bottom-bar {
-    padding: 1.5rem 1rem;
-    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
-    /* Если очень узко, можно сделать отступы поменьше */
-    gap: 0.5rem;
+    /* Гигантский отступ снизу, чтобы гарантированно пробить Safari */
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
   }
   .corner-controls {
-    padding: 0 1.25rem;
-    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    /* Поднимаем уголки над кнопкой и Safari */
+    bottom: calc(4.5rem + env(safe-area-inset-bottom));
+    left: 1.25rem;
+    right: 1.25rem;
   }
 }
 

@@ -11,6 +11,13 @@
   transition: opacity 1s ease;
 }
 
+@media (max-width: 450px) {
+  .orbit-container {
+    /* Кольцо масштабируется на те же 24-25%, чтобы идеально сидеть поверх орба */
+    transform: translate(-50%, -50%) scale(0.76); 
+  }
+}
+
 .orbit-container.playing {
   opacity: 1; 
 }
