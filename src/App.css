@@ -15,7 +15,7 @@
   top: 0;
   left: 0;
   right: 0;
-  padding: 2rem;
+  padding: calc(2rem + env(safe-area-inset-top)) 2rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,8 +27,8 @@
   bottom: 0;
   left: 0;
   right: 0;
+  /* Значительно уменьшаем внутренний отступ снизу в угоду margin-дочерних элеметов */
   padding: 2rem;
-  padding-bottom: calc(2rem + env(safe-area-inset-bottom)); /* Учет отступа iPhone */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -105,6 +105,7 @@
   font-weight: 500;
   transition: all 0.2s ease;
   backdrop-filter: blur(10px);
+  margin-bottom: env(safe-area-inset-bottom);
 }
 
 .pill-button:hover {
@@ -420,15 +421,17 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 @media (max-width: 450px) {
-  .bottom-bar {
-    /* Гигантский отступ снизу, чтобы гарантированно пробить Safari */
-    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+  .pill-button {
+    /* На мобилке приподнимаем кнопку, чтобы под ней гарантированно поместились Corner Controls */
+    margin-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    font-size: 1rem !important; /* Чуть меньше шрифт, чтобы сама кнопка не была монструозной */
+    padding: 12px 24px !important;
   }
   .corner-controls {
-    /* Поднимаем уголки над кнопкой и Safari */
-    bottom: calc(4.5rem + env(safe-area-inset-bottom));
-    left: 1.25rem;
-    right: 1.25rem;
+    /* Опускаем уголки в самый низ экрана в безопасную зону */
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+    left: 1.5rem;
+    right: 1.5rem;
   }
 }
 

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import './LiquidOrb.css';
 
 type LiquidOrbProps = {
@@ -6,33 +7,45 @@ type LiquidOrbProps = {
 };
 
 export function LiquidOrb({ phase }: LiquidOrbProps) {
+  // Определяем, мобильное ли устройство, чтобы уменьшить разрастание
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 450);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 450);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Базовый множитель масштаба для мобильных. Чем он меньше, тем слабее "раздувается" орб на смартфоне.
+  const mobileScaleFactor = isMobile ? 0.75 : 1; 
+
   // Анимация масштаба всего контейнера и силы свечения
   const getContainerState = () => {
     switch (phase) {
       case 'inhale':
         return {
-          scale: 1.1,
+          scale: 1.1 * mobileScaleFactor,
           filter: 'drop-shadow(0 0 80px rgba(27, 255, 255, 0.5))',
         };
       case 'hold':
         return {
-          scale: 1.15,
+          scale: 1.15 * mobileScaleFactor,
           filter: 'drop-shadow(0 0 100px rgba(233, 64, 87, 0.6))',
         };
       case 'exhale':
         return {
-          scale: 0.7,
+          scale: 0.7 * mobileScaleFactor,
           filter: 'drop-shadow(0 0 40px rgba(56, 239, 125, 0.2))',
         };
       case 'holdOut':
         return {
-          scale: 0.65,
+          scale: 0.65 * mobileScaleFactor,
           filter: 'drop-shadow(0 0 20px rgba(56, 239, 125, 0.1))',
         };
       case 'idle':
       default:
         return {
-          scale: 0.8,
+          scale: 0.8 * mobileScaleFactor,
           filter: 'drop-shadow(0 0 30px rgba(255, 255, 255, 0.15))',
         };
     }
