@@ -237,6 +237,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+  align-items: flex-end; /* Выравниваем по низу */
   transition: opacity 0.3s ease;
   width: 100%;
   max-width: 400px;
@@ -301,15 +302,30 @@
 .input-group.phase-holdOut {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 0.5rem; /* Физически меньше по высоте */
-  margin: 0 1rem; /* Сжали с боков */
-  gap: 0.25rem;
+  padding: 0.4rem; /* Физически меньше по высоте еще больше */
+  margin: 0 1.5rem; /* Сжали с боков еще больше */
+  gap: 0.2rem;
 }
 
 .input-group.phase-hold label,
 .input-group.phase-holdOut label {
-  font-size: 0.75rem; /* Чуть мельче текст */
-  opacity: 0.6;
+  font-size: 0.7rem; /* Чуть мельче текст */
+  opacity: 0.5;
+  margin-bottom: 0.2rem;
+}
+
+/* Уменьшаем кнопки внутри задержек */
+.input-group.phase-hold .stepper-btn,
+.input-group.phase-holdOut .stepper-btn {
+  width: 28px;
+  height: 28px;
+  font-size: 1rem;
+}
+
+/* Уменьшаем шрифт инпута внутри задержек */
+.input-group.phase-hold input,
+.input-group.phase-holdOut input {
+  font-size: 1.2rem;
 }
 
 .input-group.phase-hold:hover,
