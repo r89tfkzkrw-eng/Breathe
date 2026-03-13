@@ -56,15 +56,15 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
   };
 
   const inhale1Length = isPhysiological ? Math.floor(durations.inhale * 0.7) : durations.inhale;
+  const inhale2Length = isPhysiological ? durations.inhale - inhale1Length : 0;
   
   // Угол поворота для маркера (ровно на точке 70% вдоха).
-  // Из-за gap линия заканчивается чуть раньше, но маркером мы закрываем эту "идеальную" математическую точку,
-  // поэтому просто сместим маркер назад на половину gap, чтобы он сидел на линии.
   const inhale1Percentage = isPhysiological ? inhale1Length / totalDuration : 0;
-  // Сдвиг на - gap/2 в радианах/градусах (чтобы точка легла на конец укороченной линии):
+  // Сдвиг на - gap/2 в радианах/градусах (чтобы точка легла между сегментами):
   const markerAngle = isPhysiological ? ((inhale1Percentage * circumference - gap / 2) / circumference) * 360 : 0;
 
-  const inhaleOffset = 0;
+  const inhale1Offset = 0;
+  const inhale2Offset = inhale1Offset + inhale1Length;
   const holdOffset = durations.inhale;
   const exhaleOffset = holdOffset + durations.hold;
   const holdOutOffset = exhaleOffset + durations.exhale;
@@ -73,40 +73,46 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
     <div className={`orbit-container ${isPlaying ? 'playing' : ''}`}>
       <svg width="400" height="400" className="orbit-svg" viewBox="0 0 400 400">
         
-        {/* Базовый трек и маркер (Группа для идеального слияния прозрачности) */}
-        {/* Атрибут opacity добавлен напрямую в SVG, чтобы обойти баги CSS в Safari/WKWebView */}
-        <g opacity={0.25}>
-          {/* Сплошной Вдох */}
+        {/* Базовый трек: белые сегменты с прозрачностью 0.25 в CSS */}
+        {/* Вдох 1 */}
+        <circle 
+          cx="200" cy="200" r={radius} 
+          className="orbit-track-segment"
+          style={getSegmentStyles(inhale1Length, inhale1Offset)}
+        />
+        
+        {/* Довдох (inhale 2) */}
+        {isPhysiological && (
           <circle 
             cx="200" cy="200" r={radius} 
             className="orbit-track-segment"
-            style={getSegmentStyles(durations.inhale, inhaleOffset)}
+            style={getSegmentStyles(inhale2Length, inhale2Offset)}
           />
-          
-          {/* Узелок Довдоха */}
-          {isPhysiological && (
-            <g style={{ transform: `rotate(${markerAngle}deg)`, transformOrigin: '200px 200px' }}>
-              {/* Белый кружок, который вместе с линией глушится до 25% прозрачности родительской группой */}
-              <circle cx="380" cy="200" r="3" fill="#FFF" />
-            </g>
-          )}
+        )}
+        
+        {/* Узелок Довдоха между сегментами вдоха */}
+        {isPhysiological && (
+          <g style={{ transform: `rotate(${markerAngle}deg)`, transformOrigin: '200px 200px' }}>
+            {/* Цвет должен точно совпадать с rgba(255, 255, 255, 0.25) из CSS */}
+            <circle cx="380" cy="200" r="2.5" fill="rgba(255, 255, 255, 0.25)" />
+          </g>
+        )}
 
-          <circle 
-            cx="200" cy="200" r={radius} 
-            className="orbit-track-segment"
-            style={getSegmentStyles(durations.hold, holdOffset)}
-          />
-          <circle 
-            cx="200" cy="200" r={radius} 
-            className="orbit-track-segment"
-            style={getSegmentStyles(durations.exhale, exhaleOffset)}
-          />
-          <circle 
-            cx="200" cy="200" r={radius} 
-            className="orbit-track-segment"
-            style={getSegmentStyles(durations.holdOut, holdOutOffset)}
-          />
-        </g>
+        <circle 
+          cx="200" cy="200" r={radius} 
+          className="orbit-track-segment"
+          style={getSegmentStyles(durations.hold, holdOffset)}
+        />
+        <circle 
+          cx="200" cy="200" r={radius} 
+          className="orbit-track-segment"
+          style={getSegmentStyles(durations.exhale, exhaleOffset)}
+        />
+        <circle 
+          cx="200" cy="200" r={radius} 
+          className="orbit-track-segment"
+          style={getSegmentStyles(durations.holdOut, holdOutOffset)}
+        />
       </svg>
 
       {/* Индикатор прогресса (белая точка, бегущая по кругу) */}
