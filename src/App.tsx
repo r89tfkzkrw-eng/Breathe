@@ -492,12 +492,22 @@ function App() {
         </main>
       </div>
 
-      {/* Bottom Controls (видна всегда) */}
+      {/* Bottom Controls (видна всегда, теперь это Grid) */}
       <footer className="bottom-bar">
+        {/* Левая часть: Язык */}
+        <div className="corner-controls" style={{ display: showSettings ? 'none' : 'flex', justifyContent: 'flex-start' }}>
+          <div className="lang-switch">
+            <span className={lang === 'ru' ? 'active' : ''} onClick={() => setLang('ru')} style={{ cursor: 'pointer' }}>Ru</span>
+            <span className="separator">/</span>
+            <span className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')} style={{ cursor: 'pointer' }}>En</span>
+          </div>
+        </div>
+
+        {/* Центр: Кнопка Старт/Пауза */}
         <button 
           className="pill-button"
           onClick={async () => {
-            if (showSettings) return; // заблокировано пока открыты настройки
+            if (showSettings) return; 
             if (!isPlaying) {
               await audio.init(); 
             }
@@ -506,9 +516,10 @@ function App() {
           style={{ 
             padding: '16px 32px', 
             fontSize: '1.1rem',
-            opacity: showSettings ? 0.3 : 1, // Затухание, если открыты настройки
+            opacity: showSettings ? 0.3 : 1,
             transition: 'opacity 0.3s ease',
-            cursor: showSettings ? 'default' : 'pointer'
+            cursor: showSettings ? 'default' : 'pointer',
+            margin: '0 auto' 
           }}
         >
           {isPlaying ? (
@@ -523,21 +534,14 @@ function App() {
             </>
           )}
         </button>
-      </footer>
 
-      {/* Угловые элементы (язык и feedback) */}
-      <div className="corner-controls" style={{ display: showSettings ? 'none' : 'flex' }}>
-        <div className="lang-switch">
-          <span className={lang === 'ru' ? 'active' : ''} onClick={() => setLang('ru')} style={{ cursor: 'pointer' }}>Ru</span>
-          <span className="separator">/</span>
-          <span className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')} style={{ cursor: 'pointer' }}>En</span>
+        {/* Правая часть: Обратная связь */}
+        <div className="corner-controls" style={{ display: showSettings ? 'none' : 'flex', justifyContent: 'flex-end' }}>
+          <a href="https://t.me/dmt_terek" target="_blank" rel="noreferrer" className="corner-feedback">
+            {t.feedback}
+          </a>
         </div>
-        
-        {/* Обратная связь - Telegram создателя */}
-        <a href="https://t.me/dmt_terek" target="_blank" rel="noreferrer" className="corner-feedback">
-          {t.feedback}
-        </a>
-      </div>
+      </footer>
     </div>
   );
 }

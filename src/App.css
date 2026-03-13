@@ -23,16 +23,15 @@
 }
 
 .bottom-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  /* Переходим на grid-элемент для идеального распределения элементов футера */
+  width: 100%;
   padding: 2rem;
   padding-bottom: calc(2rem + env(safe-area-inset-bottom)); /* Учет отступа iPhone */
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   z-index: 10;
+  box-sizing: border-box;
 }
 
 .visualizer-area {
@@ -404,27 +403,33 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* --- Угловые элементы главного экрана --- */
 .corner-controls {
-  position: absolute;
-  bottom: calc(2rem + env(safe-area-inset-bottom));
-  left: 2rem;
-  right: 2rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  pointer-events: none;
+}
+
+.bottom-bar {
+  width: 100%;
+  padding: 0 2rem;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: flex-end;
   z-index: 10;
-  pointer-events: none; /* Пропускать клики сквозь контейнер */
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 @media (max-width: 450px) {
   .bottom-bar {
-    /* На мобильных делаем отступ СНИЗУ БОЛЬШЕ, чтобы кнопка точно поднялась над тулбаром */
-    padding-bottom: calc(3rem + env(safe-area-inset-bottom));
+    padding: 1.5rem 1rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    /* Если очень узко, можно сделать отступы поменьше */
+    gap: 0.5rem;
   }
   .corner-controls {
-    /* Также поднимаем и угловые элементы */
-    bottom: calc(3rem + env(safe-area-inset-bottom));
-    left: 1.25rem;
-    right: 1.25rem;
+    padding: 0 1.25rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
   }
 }
 
