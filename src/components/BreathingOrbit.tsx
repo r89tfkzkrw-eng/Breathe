@@ -32,6 +32,9 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
   const radius = 180;
   const circumference = 2 * Math.PI * radius;
 
+  // Небольшой зазор между основными 4 фазами
+  const gap = 12;
+
   // Функция для расчета stroke-dasharray для каждого сегмента
   const getSegmentStyles = (phaseDuration: number, previousDuration: number) => {
     if (phaseDuration === 0) return { display: 'none' };
@@ -39,8 +42,8 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
     const phasePercentage = phaseDuration / totalDuration;
     const offsetPercentage = previousDuration / totalDuration;
     
-    // Длина линии
-    const lineLength = (phasePercentage * circumference);
+    // Длина линии минус gap, чтобы визуально отделить сегменты
+    const lineLength = (phasePercentage * circumference) - gap;
     const strokeDasharray = `${Math.max(0, lineLength)} ${circumference}`;
     
     // SVG уже повернут на -90deg в CSS, поэтому просто сдвигаем назад на нужный процент длины круга
@@ -54,9 +57,12 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
 
   const inhale1Length = isPhysiological ? Math.floor(durations.inhale * 0.7) : durations.inhale;
   
-  // Угол поворота для маркера. (ровно на точке 70% вдоха)
+  // Угол поворота для маркера (ровно на точке 70% вдоха).
+  // Из-за gap линия заканчивается чуть раньше, но маркером мы закрываем эту "идеальную" математическую точку,
+  // поэтому просто сместим маркер назад на половину gap, чтобы он сидел на линии.
   const inhale1Percentage = isPhysiological ? inhale1Length / totalDuration : 0;
-  const markerAngle = isPhysiological ? inhale1Percentage * 360 : 0;
+  // Сдвиг на - gap/2 в радианах/градусах (чтобы точка легла на конец укороченной линии):
+  const markerAngle = isPhysiological ? ((inhale1Percentage * circumference - gap / 2) / circumference) * 360 : 0;
 
   const inhaleOffset = 0;
   const holdOffset = durations.inhale;
