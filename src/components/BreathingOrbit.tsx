@@ -10,7 +10,7 @@ type PhaseDurations = {
 
 type BreathingOrbitProps = {
   durations: PhaseDurations;
-  currentPhase: 'idle' | 'inhale' | 'hold' | 'exhale' | 'holdOut';
+  currentPhase: 'idle' | 'inhale' | 'inhaleDouble' | 'hold' | 'exhale' | 'holdOut';
   isPlaying: boolean;
 };
 

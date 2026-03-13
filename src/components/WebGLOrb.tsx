@@ -16,7 +16,7 @@ const colors = {
 };
 
 type WebGLOrbProps = {
-  phase: 'idle' | 'inhale' | 'hold' | 'exhale' | 'holdOut';
+  phase: 'idle' | 'inhale' | 'inhaleDouble' | 'hold' | 'exhale' | 'holdOut';
   duration?: number;
 };
 
@@ -87,6 +87,10 @@ const BlobMesh = ({ phase, duration = 4000 }: WebGLOrbProps) => {
       case 'inhale':
         // Вдох: радиальный градиент плавно расширяется (снизили яркость и радиус по просьбе)
         targetParams.current = { scale: 1.25, noiseStrength: 0.15, noiseSpeed: 0.15, color1: colors.inhale[0], color2: colors.inhale[1], glowRadius: 700, glowAlpha: 0.5 };
+        break;
+      case 'inhaleDouble':
+        // Довдох: резкое дополнительное расширение и всплеск свечения
+        targetParams.current = { scale: 1.35, noiseStrength: 0.18, noiseSpeed: 0.25, color1: colors.inhale[0], color2: colors.inhale[1], glowRadius: 850, glowAlpha: 0.65 };
         break;
       case 'hold':
         // Пауза (на вдохе)

@@ -5,9 +5,7 @@ import { WebGLOrb } from './components/WebGLOrb';
 import { BreathingOrbit } from './components/BreathingOrbit';
 import { AudioEngine } from './AudioEngine';
 import './App.css';
-
-type Phase = 'idle' | 'inhale' | 'hold' | 'exhale' | 'holdOut';
-
+type Phase = 'idle' | 'inhale' | 'inhaleDouble' | 'hold' | 'exhale' | 'holdOut';
 // Типы для пресетов
 export type PresetValues = {
   inhale: number;
@@ -170,8 +168,20 @@ function App() {
       const durationsToUse = activePreset.id === 'custom' ? customDurations : activePreset.durations;
       
       while (isMounted && isPlaying) {
-        await playPhase('inhale', durationsToUse.inhale);
-        if (!isMounted || !isPlaying) break;
+        if (activePreset.id === 'physiological') {
+          // Специальная разбивка для Физиологического вздоха: 70% первый вдох, 30% довдох
+          const inhale1 = Math.floor(durationsToUse.inhale * 0.7);
+          const inhaleDouble = durationsToUse.inhale - inhale1;
+          
+          await playPhase('inhale', inhale1);
+          if (!isMounted || !isPlaying) break;
+          
+          await playPhase('inhaleDouble', inhaleDouble);
+          if (!isMounted || !isPlaying) break;
+        } else {
+          await playPhase('inhale', durationsToUse.inhale);
+          if (!isMounted || !isPlaying) break;
+        }
         
         await playPhase('hold', durationsToUse.hold);
         if (!isMounted || !isPlaying) break;
@@ -210,6 +220,7 @@ function App() {
     if (!isPlaying) return 'Готовы?';
     switch (phase) {
       case 'inhale': return 'Вдох...';
+      case 'inhaleDouble': return 'До-вдох...';
       case 'hold': return 'Задержите...';
       case 'exhale': return 'Выдох...';
       case 'holdOut': return 'Задержите...';
@@ -319,7 +330,7 @@ function App() {
         )}
       </AnimatePresence>
 
-      <div style={{ display: isPlaying || showSettings ? 'none' : 'contents' }}>
+      <div style={{ display: showSettings ? 'none' : 'contents' }}>
         {/* Top Navigation */}
         <header className="top-bar">
           <AnimatePresence>
@@ -373,7 +384,7 @@ function App() {
                 >
                   {getInstruction()}
                   <div className="countdown-text">
-                    {((activePreset.id === 'custom' ? customDurations : activePreset.durations)[phase as keyof PresetValues] / 1000).toFixed(0)}s
+                    {(phaseDuration / 1000).toFixed(1).replace('.0', '')}s
                   </div>
                 </motion.div>
               )}

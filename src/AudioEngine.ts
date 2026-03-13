@@ -64,7 +64,7 @@ export class AudioEngine {
     this.isPlaying = false;
   }
 
-  public transitionToPhase(phase: 'inhale' | 'hold' | 'exhale' | 'holdOut' | 'idle', durationMs: number) {
+  public transitionToPhase(phase: 'inhale' | 'inhaleDouble' | 'hold' | 'exhale' | 'holdOut' | 'idle', durationMs: number) {
     if (!this.ctx || phase === 'idle') return;
     
     // Если движок не стартовал, стартуем его
@@ -80,6 +80,11 @@ export class AudioEngine {
         // Вдох: Светлый, расширяющийся аккорд (C Major 9)
         // Частоты: 261.63 (C4), 329.63 (E4), 392.00 (G4), 493.88 (B4), 587.33 (D5) 
         this.playChord([261.63, 329.63, 392.00, 493.88, 587.33], durationSec);
+        break;
+
+      case 'inhaleDouble':
+        // Довдох: Повторяем аккорд, но добавляем звенящую верхушку (C6) для акцента
+        this.playChord([261.63, 329.63, 392.00, 493.88, 587.33, 1046.50], durationSec);
         break;
 
       case 'hold':
