@@ -1,21 +1,27 @@
 .app-container {
-  flex: 1;
+  /* Полностью отказываемся от dvh/vh. Жестко фиксируем контейнер по краям окна браузера.
+     ОС сама решит, где эти края с учетом панелей навигации. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
   width: 100%;
-  height: 100dvh; /* Возвращаем dvh: он корректно работает с Safari Toolbar при скролле */
   overflow: hidden;
+  background: var(--bg-main); /* Подстраховка для фона */
 }
 
 .top-bar {
   position: absolute;
-  top: 0;
+  /* Привязываем панель строго к верху + сейф-зоне */
+  top: env(safe-area-inset-top);
   left: 0;
   right: 0;
-  padding: calc(2rem + env(safe-area-inset-top)) 2rem 2rem;
+  padding: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -24,10 +30,10 @@
 
 .bottom-bar {
   position: absolute;
-  bottom: 0;
+  /* Привязываем панель строго к низу + сейф-зоне */
+  bottom: env(safe-area-inset-bottom);
   left: 0;
   right: 0;
-  /* Значительно уменьшаем внутренний отступ снизу в угоду margin-дочерних элеметов */
   padding: 2rem;
   display: flex;
   justify-content: center;
@@ -117,21 +123,22 @@
   transform: translateY(0);
 }
 
-/* Настройки и пресеты */
 .settings-modal {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100dvh;
+  right: 0;
+  bottom: 0;
   background: var(--bg-main);
   z-index: 50;
   display: flex;
   flex-direction: column;
   padding: 2rem;
+  padding-top: calc(2rem + env(safe-area-inset-top));
   padding-bottom: calc(2rem + env(safe-area-inset-bottom));
   box-sizing: border-box;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
 }
 
 .settings-header {
@@ -415,20 +422,19 @@ input[type=number]::-webkit-outer-spin-button {
   right: 2rem;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end; /* Выравнивание по нижнему краю */
   z-index: 10;
   pointer-events: none; /* Пропускать клики сквозь контейнер */
 }
 
 @media (max-width: 450px) {
   .pill-button {
-    /* На мобилке приподнимаем кнопку, чтобы под ней гарантированно поместились Corner Controls */
-    margin-bottom: calc(1.5rem + env(safe-area-inset-bottom));
-    font-size: 1rem !important; /* Чуть меньше шрифт, чтобы сама кнопка не была монструозной */
+    font-size: 1rem !important; 
     padding: 12px 24px !important;
+    margin-bottom: 2rem; /* Сдвигаем кнопку чуть выше уголков */
   }
   .corner-controls {
-    /* Опускаем уголки в самый низ экрана в безопасную зону */
+    /* Намертво прибиваем уголки вниз */
     bottom: calc(1rem + env(safe-area-inset-bottom));
     left: 1.5rem;
     right: 1.5rem;
