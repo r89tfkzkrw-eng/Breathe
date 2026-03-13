@@ -74,7 +74,8 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
       <svg width="400" height="400" className="orbit-svg" viewBox="0 0 400 400">
         
         {/* Базовый трек и маркер (Группа для идеального слияния прозрачности) */}
-        <g className="orbit-track-group">
+        {/* Атрибут opacity добавлен напрямую в SVG, чтобы обойти баги CSS в Safari/WKWebView */}
+        <g opacity={0.25}>
           {/* Сплошной Вдох */}
           <circle 
             cx="200" cy="200" r={radius} 
@@ -85,8 +86,8 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
           {/* Узелок Довдоха */}
           {isPhysiological && (
             <g style={{ transform: `rotate(${markerAngle}deg)`, transformOrigin: '200px 200px' }}>
-              {/* Точно на линии орбиты (200 + 180 = 380), белый кружок (окрасится в 0.25 прозрачности благодаря группе) */}
-              <circle cx="380" cy="200" r="2" fill="#FFF" />
+              {/* Белый кружок, который вместе с линией глушится до 25% прозрачности родительской группой */}
+              <circle cx="380" cy="200" r="3" fill="#FFF" />
             </g>
           )}
 
