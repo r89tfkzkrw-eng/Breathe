@@ -54,12 +54,18 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
     };
   };
 
-  const inhale1Length = isPhysiological ? Math.floor(durations.inhale * 0.7) : 0;
-  // Угол поворота для маркера. Радиус круга 180, центр 200,200. Стартовая точка (0 градусов) в SVG-круге: cx+r, cy -> (380, 200)
+  const inhale1Length = isPhysiological ? Math.floor(durations.inhale * 0.7) : durations.inhale;
+  const inhale2Length = isPhysiological ? durations.inhale - inhale1Length : 0;
+  
+  // Угол поворота для маркера. Он должен встать точно посередине зазора (gap).
+  // Зазор идет от конца линии inhale1 до начала inhale2.
+  // Конец линии: (inhale1Length / totalDuration * circumference) - gap.
+  // Середина зазора добавляет gap / 2. То есть (inhale1Length / totalDuration * circumference) - gap / 2
   const inhale1Percentage = isPhysiological ? inhale1Length / totalDuration : 0;
-  const markerAngle = inhale1Percentage * 360;
+  const markerAngle = isPhysiological ? ((inhale1Percentage * circumference - gap / 2) / circumference) * 360 : 0;
 
-  const inhaleOffset = 0;
+  const inhale1Offset = 0;
+  const inhale2Offset = inhale1Offset + inhale1Length;
   const holdOffset = durations.inhale;
   const exhaleOffset = holdOffset + durations.hold;
   const holdOutOffset = exhaleOffset + durations.exhale;
@@ -69,17 +75,26 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
       <svg width="400" height="400" className="orbit-svg" viewBox="0 0 400 400">
         
         {/* Базовый трек: белые/серые отрезки */}
-        {/* Вдох */}
+        {/* Вдох 1 */}
         <circle 
           cx="200" cy="200" r={radius} 
           className="orbit-track-segment"
-          style={getSegmentStyles(durations.inhale, inhaleOffset)}
+          style={getSegmentStyles(inhale1Length, inhale1Offset)}
         />
-        {/* Маркер Довдоха (точка на орбите) */}
+        {/* Довдох (inhale 2) */}
+        {isPhysiological && (
+          <circle 
+            cx="200" cy="200" r={radius} 
+            className="orbit-track-segment"
+            style={getSegmentStyles(inhale2Length, inhale2Offset)}
+          />
+        )}
+        
+        {/* Маркер Довдоха в дырке (gap) между вдох 1 и вдох 2 */}
         {isPhysiological && (
           <g style={{ transform: `rotate(${markerAngle}deg)`, transformOrigin: '200px 200px' }}>
-            {/* Точно на линии орбиты (200 + 180 = 380), маленький серый кружок */}
-            <circle cx="380" cy="200" r="3" fill="rgba(255,255,255,0.3)" />
+            {/* Точно на линии орбиты (200 + 180 = 380), маленький серый кружок в цвет орбиты */}
+            <circle cx="380" cy="200" r="2" fill="rgba(255, 255, 255, 0.25)" />
           </g>
         )}
         <circle 
