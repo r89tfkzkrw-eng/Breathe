@@ -11,13 +11,6 @@
   filter: url(#goo);
 }
 
-@media (max-width: 450px) {
-  .liquid-orb-container {
-    width: 247px;  /* Уменьшено на 35% от 380px */
-    height: 247px;
-  }
-}
-
 .svg-filters {
   position: absolute;
   visibility: hidden;

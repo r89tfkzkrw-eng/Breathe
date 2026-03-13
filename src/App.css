@@ -44,6 +44,16 @@
   position: relative;
 }
 
+/* На мобильных (ширина < 450px) уменьшаем визуализатор целиком на 20%, 
+   сохраняя идеальные оригинальные пропорции орба и орбиты друг к другу */
+@media (max-width: 450px) {
+  .visualizer-area {
+    /* transform-origin center фиксирует центр при сжатии */
+    transform: scale(0.80);
+    transform-origin: center;
+  }
+}
+
 .instruction-text {
   position: absolute;
   top: 10%;
