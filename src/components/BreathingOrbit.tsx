@@ -78,8 +78,8 @@ export const BreathingOrbit: React.FC<BreathingOrbitProps> = ({ durations, curre
         {/* Маркер Довдоха (точка на орбите) */}
         {isPhysiological && (
           <g style={{ transform: `rotate(${markerAngle}deg)`, transformOrigin: '200px 200px' }}>
-            {/* Точно на линии орбиты (200 + 180 = 380) */}
-            <circle cx="380" cy="200" r="5" fill="#fff" />
+            {/* Точно на линии орбиты (200 + 180 = 380), маленький серый кружок */}
+            <circle cx="380" cy="200" r="3" fill="rgba(255,255,255,0.3)" />
           </g>
         )}
         <circle 

@@ -532,8 +532,8 @@ function App() {
           <span className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')} style={{ cursor: 'pointer' }}>En</span>
         </div>
         
-        {/* Anti-spam form redirect. User sets up Formspree or uses mailto. */}
-        <a href="https://formspree.io/f/YOUR_FORM_ID_HERE" target="_blank" rel="noreferrer" className="corner-feedback" title="Feedback Form (Setup required)">
+        {/* Обратная связь - Telegram создателя */}
+        <a href="https://t.me/dmt_terek" target="_blank" rel="noreferrer" className="corner-feedback">
           {t.feedback}
         </a>
       </div>
