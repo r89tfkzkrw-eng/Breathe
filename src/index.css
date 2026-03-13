@@ -1,0 +1,106 @@
+:root {
+  /*
+   * Theme Variables: Spatial Dark (Default)
+   */
+  --bg-color: #000000;
+  --text-main: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.5);
+  
+  /* Orb (Aura) colors - Phase dependent */
+  --orb-breathe-in-color-1: #2E3192; /* Deep Blue */
+  --orb-breathe-in-color-2: #1BFFFF; /* Bright Cyan */
+  
+  --orb-hold-color-1: #8A2387; /* Magenta/Purple */
+  --orb-hold-color-2: #E94057; /* Pink */
+  
+  --orb-breathe-out-color-1: #11998e; /* Teal */
+  --orb-breathe-out-color-2: #38ef7d; /* Soft Green */
+  
+  --orb-idle-color-1: #232526; /* Dark grey */
+  --orb-idle-color-2: #414345; /* Dark grey */
+
+  /* Surface / Glassmorphism */
+  --surface-bg: rgba(255, 255, 255, 0.03);
+  --surface-border: rgba(255, 255, 255, 0.05);
+
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color-scheme: dark;
+}
+
+[data-theme="light-clay"] {
+  --bg-color: #F8F5EE; /* Soft off-white */
+  --text-main: #3E4B43; /* Sage green / dark gray */
+  --text-muted: rgba(62, 75, 67, 0.5);
+  
+  /* Soft pastel aura */
+  --orb-breathe-in-color-1: #E0C3FC;
+  --orb-breathe-in-color-2: #8EC5FC;
+  
+  --orb-hold-color-1: #FFECD2;
+  --orb-hold-color-2: #FCB69F;
+  
+  --orb-breathe-out-color-1: #A1C4FD;
+  --orb-breathe-out-color-2: #C2E9FB;
+  
+  --orb-idle-color-1: #E0E4CC;
+  --orb-idle-color-2: #F3E5F5;
+
+  --surface-bg: rgba(255, 255, 255, 0.6);
+  --surface-border: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="brutalist"] {
+  --bg-color: #EFEFEF;
+  --text-main: #111111;
+  --text-muted: #555555;
+  
+  /* Stark, minimal contrast */
+  --orb-breathe-in-color-1: #111111;
+  --orb-breathe-in-color-2: #333333;
+  
+  --orb-hold-color-1: #555555;
+  --orb-hold-color-2: #777777;
+  
+  --orb-breathe-out-color-1: #999999;
+  --orb-breathe-out-color-2: #CCCCCC;
+  
+  --orb-idle-color-1: #DDDDDD;
+  --orb-idle-color-2: #EEEEEE;
+
+  --surface-bg: #FFFFFF;
+  --surface-border: #111111;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.8s ease, color 0.8s ease;
+  overflow: hidden; /* App feels like a single fullscreen surface */
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: var(--surface-bg);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 32px;
+}

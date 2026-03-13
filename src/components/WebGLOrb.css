@@ -1,0 +1,30 @@
+.webgl-orb-container {
+  width: 400px;
+  height: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  
+  /* JS динамически управляет CSS-фильтром свечения в WebGLOrb.tsx */
+  /* filter: drop-shadow(...) */
+  transition: opacity 2s ease;
+}
+
+/* Удалены жестко зашитые фильтры по фазам (inhale, hold, exhale, holdOut), 
+   так как теперь React Component плавно прокидывает их в DOM-элемент через JS интерполяцию. */
+
+.orb-aura {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 9;
+  pointer-events: none;
+  background: transparent;
+  filter: blur(20px);
+}

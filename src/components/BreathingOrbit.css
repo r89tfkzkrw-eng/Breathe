@@ -1,0 +1,58 @@
+.orbit-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0; /* Скрыто в idle */
+  transition: opacity 1s ease;
+}
+
+.orbit-container.playing {
+  opacity: 1; 
+}
+
+/* Статичная тонкая белая подложка */
+.orbit-svg {
+  fill: none;
+  transform: rotate(-90deg); /* компенсируем начальный поворот SVG, чтобы старт был на 12 часов */
+}
+
+.orbit-track-segment {
+  stroke: rgba(255, 255, 255, 0.25);
+  stroke-width: 2;
+  stroke-linecap: round;
+  transition: stroke 0.3s ease;
+}
+
+/* Движущийся Индикатор */
+.orbit-indicator-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Анимация вращения ровно на 360 градусов за 1 полный цикл */
+  animation: orbit-spin linear forwards;
+}
+
+/* Сама точка индикатора, "прикрепленная" на радиусе орбиты (400/2 = 200 центр. R=180 -> Отступ 20px сверху) */
+.orbit-indicator-dot {
+  position: absolute;
+  top: 15px; /* (400 - 360)/2 - 5px половина высоты = 20 - 5 = 15. Или просто подгоняем под stroke */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: #FFF;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #FFF, 0 0 20px rgba(255,255,255,0.5);
+}
+
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
