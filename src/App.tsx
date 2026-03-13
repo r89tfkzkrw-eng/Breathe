@@ -115,7 +115,25 @@ function App() {
   const [phaseDuration, setPhaseDuration] = useState(2000); // Базовое время для idle
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [activePreset, setActivePreset] = useState<BreathPreset>(PRESETS[0]);
+  const [activePreset, setActivePreset] = useState<BreathPreset>(() => {
+    const savedMode = localStorage.getItem('breatheLastPreset');
+    const customSaved = localStorage.getItem('breatheCustomPreset');
+    
+    if (savedMode === 'custom' && customSaved) {
+      try {
+        return { id: 'custom', name: 'Свой ритм', description: 'Ваши индивидуальные настройки', instruction: 'Следуйте своему собственному ритму дыхания.', durations: JSON.parse(customSaved) };
+      } catch (e) {}
+    } else if (savedMode) {
+      const found = PRESETS.find(p => p.id === savedMode);
+      if (found) return found;
+    }
+    return PRESETS[0];
+  });
+  
+  // Сохраняем последний выбранный пресет
+  useEffect(() => {
+    localStorage.setItem('breatheLastPreset', activePreset.id);
+  }, [activePreset.id]);
   
   // Для кастомного режима сохраняем в localStorage
   const [customDurations, setCustomDurations] = useState<PresetValues>(() => {
@@ -322,9 +340,7 @@ function App() {
             </div>
             
             <div className="settings-footer">
-              <a href="mailto:feedback@example.com?subject=Feedback on Breathe App" className="feedback-link">
-                Написать автору / Обратная связь
-              </a>
+              {/* Раньше тут была ссылка на обратную связь */}
             </div>
           </motion.div>
         )}
@@ -425,6 +441,20 @@ function App() {
           )}
         </button>
       </footer>
+
+      {/* Угловые элементы (язык и feedback) */}
+      <div className="corner-controls" style={{ display: showSettings ? 'none' : 'flex' }}>
+        <div className="lang-switch">
+          <span className="active">Ru</span>
+          <span className="separator">/</span>
+          <span style={{ cursor: 'pointer' }}>En</span>
+        </div>
+        
+        {/* Сюда можно подставить свой ник или ссылку */}
+        <a href="https://instagram.com/dmitry" target="_blank" rel="noreferrer" className="corner-feedback">
+          feedback
+        </a>
+      </div>
     </div>
   );
 }

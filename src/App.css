@@ -320,16 +320,45 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .feedback-link {
-  color: var(--text-main);
-  opacity: 0.5;
-  font-size: 0.9rem;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  transition: opacity 0.2s ease;
+  display: none; /* Старая ссылка в модалке */
 }
 
-.feedback-link:hover {
-  opacity: 0.9;
+/* --- Угловые элементы главного экрана --- */
+.corner-controls {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  right: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none; /* Пропускать клики сквозь контейнер */
+}
+
+.lang-switch, .corner-feedback {
+  pointer-events: auto; /* Включаем клики для самих элементов */
+  font-size: 0.8rem;
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+  color: var(--text-main);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lang-switch:hover, .corner-feedback:hover {
+  opacity: 0.8;
+}
+
+.lang-switch span.active {
+  font-weight: 600;
+  opacity: 1;
+}
+
+.lang-switch span.separator {
+  margin: 0 0.5rem;
+  opacity: 0.4;
 }
 
 /* Инструкция перед запуском на главном экране */
