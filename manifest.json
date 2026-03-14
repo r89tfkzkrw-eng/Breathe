@@ -2,7 +2,7 @@
   "name": "Breathe",
   "short_name": "Breathe",
   "description": "Практики осознанного дыхания",
-  "start_url": "/",
+  "start_url": "/Breathe/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#000000",
